@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Directory — Campus Connect · AIT Pune</title>
+    <meta name="description" content="Explore the AIT Pune student directory. Discover your peers, seniors, and juniors — connect with the people who make your college experience unforgettable." />
+    <link rel="stylesheet" href="student-details.css" />
+    <link rel="stylesheet" href="../shared/campus-ai.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Space+Grotesk:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+
+    <!-- ───────────── NAVBAR ───────────── -->
+    <navbar>
+      <a class="logo-wrap" href="../homepage/homepage.html" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
+        <div class="logo-icon" style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, var(--primary), var(--pink)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px;">🎓</div>
+        <div class="logo">Campus Connect</div>
+      </a>
+      <div class="nav-links">
+        <a class="nav-item" href="../homepage/homepage.html">Home</a>
+        <a class="nav-item" href="../Feed/feed.html">Feeds &amp; News</a>
+        <a class="nav-item active-nav" href="./student-details.html">Student Directory</a>
+        <a class="nav-item" href="../Faculty directory/faculty-directory.html">Faculty Directory</a>
+        <a class="nav-item" href="../alumini directory/alumini.html">Alumni Directory</a>
+        <a class="nav-item" href="../Clubs/dist/index.html">Clubs &amp; Societies</a>
+        <a class="nav-item" href="../Feed/Profile/profile.html">Profile &amp; Settings</a>
+      </div>
+      <div class="nav-right" style="display:flex; align-items:center; gap:8px;">
+        <button onclick="window.CampusAuth.signOut()" style="text-decoration:none; padding:7px 14px; background:rgba(239,68,68,0.08); color:#ef4444; border:1px solid rgba(239,68,68,0.25); border-radius:9999px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px;" title="Sign out of Campus Connect">
+          <span>🚪 Sign Out</span>
+        </button>
+      </div>
+    </navbar>
+
+    <!-- ───────────── HEADER ───────────── -->
+    <div class="info">
+      <div>
+        <div class="stu-dir">Student Directory</div>
+        <div class="stu-little-text">
+          Discover your peers, seniors, and juniors — connect with the people
+          who make your college experience unforgettable.
+        </div>
+        <div class="stu-count">🎓 Students (2000)</div>
+      </div>
+
+      <!-- Sticky controls wrapper: search + filter -->
+      <div class="sticky-controls" id="stickyControls">
+        <div class="search bar">
+          <span class="search-icon">🔍</span>
+          <input type="search" id="studentSearch" placeholder="Search by name, branch, skills…" />
+        </div>
+
+        <div class="filters">
+          <button
+            class="filters-btn"
+            id="filterToggleBtn"
+            onclick="toggleFilters(event)"
+          >⚡ Filters ▾</button>
+
+          <div class="filters-panel" id="filtersPanel" onclick="event.stopPropagation()">
+            <div class="filters-head">
+              <span>Filters &amp; Refine</span>
+              <a href="#" onclick="resetAllFilters(); return false;">Reset All</a>
+            </div>
+
+            <div class="filters-group">
+              <p>Academic Branch</p>
+              <label><input name="branch" type="radio" value="all" checked /> All Branches</label>
+              <label><input name="branch" type="radio" value="Computer Science" /> Computer Science</label>
+              <label><input name="branch" type="radio" value="Information Technology" /> Information Technology</label>
+              <label><input name="branch" type="radio" value="Electronics &amp; Comm." /> Electronics &amp; Comm.</label>
+              <label><input name="branch" type="radio" value="Mechanical Eng." /> Mechanical Eng.</label>
+            </div>
+
+            <div class="filters-group">
+              <p>Year</p>
+              <div class="year-row">
+                <button class="year-chip active" data-year="all">All</button>
+                <button class="year-chip" data-year="1st">1st</button>
+                <button class="year-chip" data-year="2nd">2nd</button>
+                <button class="year-chip" data-year="3rd">3rd</button>
+                <button class="year-chip" data-year="4th">4th</button>
+              </div>
+            </div>
+
+            <div class="filters-group">
+              <p>Clubs &amp; Societies</p>
+              <label><input type="checkbox" class="club-checkbox" value="OSS Club" /> Open Source Software Club</label>
+              <label><input type="checkbox" class="club-checkbox" value="GDG" /> Google Developers Club</label>
+              <label><input type="checkbox" class="club-checkbox" value="CP Club" /> Competitive Programming</label>
+              <label><input type="checkbox" class="club-checkbox" value="Robotics Club" /> Robotics Club</label>
+            </div>
+
+            <div class="filters-group">
+              <p>Sort By</p>
+              <select id="sortBy">
+                <option value="name-asc">Name (A–Z)</option>
+                <option value="name-desc">Name (Z–A)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div><!-- /sticky-controls -->
+    </div><!-- /info -->
+
+    <!-- ───────────── STUDENT CARDS GRID ───────────── -->
+    <div class="cards-grid" id="cardsGrid">
+      <!-- Dynamically rendered and filtered via student-details.js -->
+    </div><!-- /cards-grid -->
+
+    <!-- ───────────── MODAL OVERLAY ───────────── -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
+
+    <!-- ───────────── PROFILE MODAL (About card) ───────────── -->
+    <div class="profile-modal" id="profileModal" role="dialog" aria-modal="true">
+
+      <button class="modal-close" id="modalCloseBtn" onclick="closeModal()" aria-label="Close">✕</button>
+
+      <div class="modal-header" id="modalHeader">
+        <div class="modal-avatar-wrap">
+          <img class="modal-avatar" id="modalAvatar" src="user.png" alt="" />
+          <span class="modal-online" id="modalOnline" hidden></span>
+        </div>
+        <div class="modal-name-block">
+          <h1 class="modal-name" id="modalName"></h1>
+          <div class="modal-year" id="modalYear"></div>
+          <div class="modal-stats-row">
+            <div class="modal-stat"><strong id="modalPostCount">0</strong><span>Posts</span></div>
+            <div class="modal-stat"><strong id="modalLikeCount">0</strong><span>Likes</span></div>
+            <div class="modal-stat"><strong id="modalFollowers">0</strong><span>Followers</span></div>
+          </div>
+        </div>
+        <button class="follow-btn" id="followBtn" onclick="toggleFollow(this)">Follow</button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="modal-tabs">
+        <button class="tab-btn active" id="tabBtnAbout" data-tab="about" onclick="switchTab('about',this)">About</button>
+        <button class="tab-btn" id="tabBtnPosts" data-tab="posts" onclick="openPostsPanel()">Posts</button>
+      </div>
+
+      <!-- ABOUT TAB -->
+      <div class="tab-content active" id="tab-about">
+        <p class="modal-bio" id="modalBio"></p>
+
+        <div class="modal-section">
+          <h2 class="section-title">🏅 Achievements</h2>
+          <p id="modalAchievements" class="section-text"></p>
+        </div>
+        <div class="modal-section">
+          <h2 class="section-title">🎯 Hobbies</h2>
+          <p id="modalHobbies" class="section-text"></p>
+        </div>
+        <div class="modal-section">
+          <h2 class="section-title">🛠 Projects</h2>
+          <p id="modalProjects" class="section-text"></p>
+        </div>
+        <div class="modal-section">
+          <h2 class="section-title">🏷 Skills &amp; Frameworks</h2>
+          <div class="s-tags" id="modalSkills"></div>
+        </div>
+        <div class="modal-section">
+          <h2 class="section-title">🎪 Club Affiliations</h2>
+          <div class="s-tags" id="modalClubs"></div>
+        </div>
+        <div class="modal-section">
+          <h2 class="section-title">🌐 Connect &amp; Social Links</h2>
+          <div class="modal-social-links-grid" id="modalSocialLinksGrid">
+            <!-- Dynamic social links rendered via student-details.js -->
+          </div>
+        </div>
+      </div><!-- /tab-about -->
+
+    </div><!-- /profile-modal -->
+
+    <!-- ───────────── POSTS PANEL (larger, slides from right) ───────────── -->
+    <div class="posts-panel" id="postsPanel">
+      <div class="posts-panel-header">
+        <img class="posts-panel-avatar" id="postsPanelAvatar" src="user.png" alt="" />
+        <div class="posts-panel-name-block">
+          <div class="posts-panel-name" id="postsPanelName"></div>
+          <div class="posts-panel-sub" id="postsPanelSub"></div>
+        </div>
+        <button class="posts-panel-close" onclick="closePostsPanel()" aria-label="Close posts">✕</button>
+      </div>
+      <div class="posts-panel-feed" id="postsPanelFeed"></div>
+    </div>
+
+    <!-- ───────────── COMMENT BOTTOM SHEET ───────────── -->
+    <div class="comment-popup-overlay" id="commentOverlay" onclick="closeComments()"></div>
+    <div class="comment-popup" id="commentPopup">
+      <div class="comment-popup-header">
+        <span>Comments</span>
+        <button onclick="closeComments()" class="comment-close-btn">✕</button>
+      </div>
+      <div class="comment-list" id="commentList"></div>
+      <div class="comment-input-row">
+        <input type="text" id="newCommentInput" placeholder="Add a comment…" />
+        <button onclick="submitComment()" class="comment-post-btn">Post</button>
+      </div>
+    </div>
+    <!-- Global Toast Notification -->
+    <div class="toast-notify" id="toastNotify">
+      <span id="toastIcon">🤝</span>
+      <span id="toastMsg">Collaboration request sent!</span>
+    </div>
+
+    <!-- External Modular JavaScript -->
+    <script src="student-details.js"></script>
+    <script src="../shared/campus-ai.js"></script>
+  </body>
+</html>

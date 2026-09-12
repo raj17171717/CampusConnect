@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alumni Directory | Campus Connect</title>
+  <meta name="description" content="Discover alumni peers, seniors, and industry pioneers — connect with the people who make your college network powerful.">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="alumini.css">
+  <link rel="stylesheet" href="../shared/campus-ai.css">
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR (Exact Match to Campus Connect Website) -->
+  <nav class="top-navbar" aria-label="Main Navigation">
+    <a href="../homepage/homepage.html" class="nav-brand" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
+      <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, var(--brand-purple), #9333ea); display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px;">🎓</div>
+      <span>Campus Connect</span>
+    </a>
+
+    <ul class="nav-menu">
+      <li><a href="../homepage/homepage.html" class="nav-link-item">Home</a></li>
+      <li><a href="../Feed/feed.html" class="nav-link-item">Feeds &amp; News</a></li>
+      <li><a href="../Student-details/student-details.html" class="nav-link-item">Student Directory</a></li>
+      <li><a href="../Faculty directory/faculty-directory.html" class="nav-link-item">Faculty Directory</a></li>
+      <li><a href="./alumini.html" class="nav-link-item active">Alumni Directory</a></li>
+      <li><a href="../Clubs/dist/index.html" class="nav-link-item">Clubs &amp; Societies</a></li>
+      <li><a href="../Feed/Profile/profile.html" class="nav-link-item">Profile &amp; Settings</a></li>
+    </ul>
+
+    <div class="nav-user-actions" style="display:flex; align-items:center; gap:8px;">
+      <button onclick="window.CampusAuth.signOut()" style="border:none; padding:7px 14px; background:rgba(239,68,68,0.08); color:#ef4444; border:1px solid rgba(239,68,68,0.25); border-radius:9999px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px;" title="Sign out of Campus Connect">
+        <span>🚪 Sign Out</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- SMART SCROLL-DOCKED FLOATING SEARCH & FILTER BAR (Moves to Top-Right on Scroll) -->
+  <aside id="dockedFloatingBar" class="docked-floating-bar" aria-label="Scrolled Quick Search & Filters">
+    <div class="docked-input-wrapper">
+      <i class="fas fa-search"></i>
+      <input type="text" id="dockedSearchInput" class="docked-search-input" placeholder="Search alumni, skills, clubs..." autocomplete="off">
+    </div>
+
+    <!-- Filters Dropdown Trigger -->
+    <button id="dockedFilterTrigger" class="docked-filter-trigger" title="Quick Filters">
+      <i class="fas fa-sliders-h"></i>
+      <span>Filters</span>
+    </button>
+
+    <!-- Quick Filter Menu for Docked Bar -->
+    <div id="dockedFilterMenu" class="docked-filter-menu">
+      <div class="docked-menu-header">
+        <span><i class="fas fa-filter"></i> Quick Filters</span>
+        <button class="reset-btn" style="padding: 2px 8px; font-size: 0.72rem;" onclick="resetAll()">Reset</button>
+      </div>
+
+      <div class="docked-select-group">
+        <label for="dockedDomainSelect">Domain</label>
+        <select id="dockedDomainSelect" class="custom-filter-select" style="width: 100%;">
+          <option value="all">All Domains</option>
+          <option value="AI & ML">AI & Machine Learning</option>
+          <option value="Software Eng">Software Engineering</option>
+          <option value="Hardware & Robotics">Hardware & Robotics</option>
+          <option value="Product & Design">Product & Design</option>
+          <option value="Finance & Quant">Finance & Quant</option>
+          <option value="Cybersecurity">Cybersecurity</option>
+        </select>
+      </div>
+
+      <div class="docked-select-group">
+        <label for="dockedBatch">Graduation Batch</label>
+        <select id="dockedBatch" class="custom-filter-select" style="width: 100%;">
+          <option value="all">All Batches</option>
+          <option value="2023">Class of 2023</option>
+          <option value="2022">Class of 2022</option>
+          <option value="2021">Class of 2021</option>
+          <option value="2020">Class of 2020</option>
+          <option value="2019">Class of 2019</option>
+        </select>
+      </div>
+
+      <div class="docked-select-group">
+        <label for="dockedClub">Past Club</label>
+        <select id="dockedClub" class="custom-filter-select" style="width: 100%;">
+          <option value="all">All Past Clubs</option>
+          <option value="OSS">OSS (Open Source Society)</option>
+          <option value="GDG">GDG (Google Developer Group)</option>
+          <option value="CP">Competitive Programming</option>
+          <option value="Robotics">Robotics Club</option>
+          <option value="Design">Design & Media</option>
+          <option value="Quant">Quant Club</option>
+          <option value="Cyber">Cybersecurity</option>
+        </select>
+      </div>
+
+      <div class="docked-select-group">
+        <label for="dockedSort">Sort By</label>
+        <select id="dockedSort" class="custom-filter-select" style="width: 100%;">
+          <option value="followers">Most Followed</option>
+          <option value="batch-new">Newest Batch</option>
+          <option value="batch-old">Senior Batch</option>
+          <option value="name">Alphabetical (A-Z)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Scroll Back to Top Button -->
+    <button id="scrollTopBtn" class="scroll-top-btn" title="Back to Top">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+  </aside>
+
+  <!-- MAIN DIRECTORY PAGE -->
+  <main class="main-container">
+
+    <!-- DIRECTORY HEADER -->
+    <header class="directory-header">
+      <h1 class="directory-title">Alumni Directory</h1>
+      <p class="directory-subtitle">
+        Discover your peers, seniors, and juniors — connect with the alumni who carry forward our college legacy and shape the global tech industry.
+      </p>
+
+      <div id="alumniCountBadge" class="badge-counter-pill">
+        <i class="fas fa-graduation-cap"></i> Alumni (2000)
+      </div>
+    </header>
+
+    <!-- HERO SEARCH & FILTERS BUTTON SECTION -->
+    <section id="searchFilterSection" class="search-filter-section">
+      <div class="search-bar-row">
+        <!-- Search Input Box -->
+        <div class="search-box-wrapper">
+          <i class="fas fa-search search-box-icon"></i>
+          <input 
+            type="text" 
+            id="searchHeroInput" 
+            class="main-search-input" 
+            placeholder="Search alumni by name, skills (e.g. PyTorch, Go), past clubs (e.g. OSS, GDG), or company..." 
+            autocomplete="off"
+          >
+          <button id="clearSearchBtn" class="clear-search-btn" title="Clear Search">
+            <i class="fas fa-times"></i>
+          </button>
+          <button class="search-submit-btn" onclick="renderCards()">
+            <i class="fas fa-search"></i> Search
+          </button>
+        </div>
+
+        <!-- Filters Button next to Search -->
+        <button id="heroFilterBtn" class="hero-filter-btn" title="Open Filter Options">
+          <i class="fas fa-sliders-h"></i>
+          <span>Filters</span>
+          <span id="heroFilterBadgeDot" class="filter-badge-dot"></span>
+        </button>
+      </div>
+
+      <!-- FILTER DROPDOWN PANEL (Contains Domain Chips, Batch, Club, Sort, Reset) -->
+      <div id="filterDropdownPanel" class="filter-dropdown-panel">
+        <div class="filter-panel-header">
+          <span class="filter-panel-title"><i class="fas fa-filter"></i> Filter & Sort Alumni</span>
+          <button id="resetFiltersBtn" class="reset-btn">
+            <i class="fas fa-redo"></i> Reset Filters
+          </button>
+        </div>
+
+        <!-- Domain Chips inside Filter Panel -->
+        <div class="domain-chips-wrapper">
+          <span class="domain-chip-label">Domain of Expertise:</span>
+          <button class="domain-chip active" data-domain="all">All Domains</button>
+          <button class="domain-chip" data-domain="AI & ML">AI & Machine Learning</button>
+          <button class="domain-chip" data-domain="Software Eng">Software Engineering</button>
+          <button class="domain-chip" data-domain="Hardware & Robotics">Hardware & Robotics</button>
+          <button class="domain-chip" data-domain="Product & Design">Product & Design</button>
+          <button class="domain-chip" data-domain="Finance & Quant">Finance & Quant</button>
+          <button class="domain-chip" data-domain="Cybersecurity">Cybersecurity</button>
+        </div>
+
+        <!-- Secondary Dropdowns inside Filter Panel -->
+        <div class="dropdown-selectors-grid">
+          <!-- Batch Select -->
+          <div class="selector-box">
+            <label for="batchSelect">Graduation Batch</label>
+            <select id="batchSelect" class="custom-filter-select" aria-label="Graduation Batch">
+              <option value="all">All Batches</option>
+              <option value="2023">Class of 2023</option>
+              <option value="2022">Class of 2022</option>
+              <option value="2021">Class of 2021</option>
+              <option value="2020">Class of 2020</option>
+              <option value="2019">Class of 2019</option>
+            </select>
+          </div>
+
+          <!-- Past Club Select -->
+          <div class="selector-box">
+            <label for="clubSelect">Past College Club</label>
+            <select id="clubSelect" class="custom-filter-select" aria-label="Past College Club">
+              <option value="all">All Past Clubs</option>
+              <option value="OSS">OSS (Open Source Society)</option>
+              <option value="GDG">GDG (Google Developer Group)</option>
+              <option value="CP">Competitive Programming</option>
+              <option value="Robotics">Robotics Club</option>
+              <option value="Design">Design & Media</option>
+              <option value="Quant">Quant Club</option>
+              <option value="Cyber">Cybersecurity</option>
+            </select>
+          </div>
+
+          <!-- Sort Select -->
+          <div class="selector-box">
+            <label for="sortSelect">Sort Alumni By</label>
+            <select id="sortSelect" class="custom-filter-select" aria-label="Sort Alumni">
+              <option value="followers">Most Followed</option>
+              <option value="batch-new">Newest Batch</option>
+              <option value="batch-old">Senior Batch</option>
+              <option value="name">Alphabetical (A-Z)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPACT ALUMNI CARD GRID (Click anywhere on card to open) -->
+    <section id="alumniCardsGrid" class="alumni-card-grid">
+      <!-- Cards dynamically generated via alumini.js -->
+    </section>
+
+  </main>
+
+  <!-- ALUMNI PROFILE DETAIL MODAL (Opens on Card Tap - Shows Bio, Stats, Follow, Timeline) -->
+  <div id="profileModal" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <button id="modalCloseBtn" class="modal-close" aria-label="Close modal">
+        <i class="fas fa-times"></i>
+      </button>
+      <div id="modalContentInner" class="modal-content-inner">
+        <!-- Dynamic modal profile data -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastBar" class="toast-bar"></div>
+
+  <!-- Scripts -->
+  <script src="alumini.js"></script>
+  <script src="../shared/campus-ai.js"></script>
+</body>
+</html>
